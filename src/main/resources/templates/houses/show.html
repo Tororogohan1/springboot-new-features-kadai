@@ -25,7 +25,7 @@
                         <!-- お気に入り -->
 						<div sec:authorize="isAuthenticated()">
 							<!-- お気に入り追加 -->
-							<div th:if="${not favoriteExists}">
+                                <div sec:authorize="isAuthenticated()" th:if="${favoriteExists == false}">
 								<form id="favoriteAddForm" style="display: inline;" method="post"
 									th:action="@{/houses/__${house.id}__/create}">
 									<input type="hidden" name="houseId" th:value="${house.id}">
@@ -34,7 +34,7 @@
 								</form>
 							</div>
 							<!-- お気に入り解除 -->
-							<div th:if="${favoriteExists}">
+                               <div sec:authorize="isAuthenticated()" th:if="${favoriteExists == true}">
 								<form id="favoriteRemoveForm" style="display: inline;" method="post"
 									th:action="@{/houses/__${house.id}__/delete}">
 									<input type="hidden" name="houseId" th:value="${house.id}">
@@ -106,8 +106,7 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="text-center"><h1>レビュー</h1></div>
-
-                                        <div class="text-center" sec:authorize="isAuthenticated()"th:if="${!doneReview}">
+                                            <div class="text-center" sec:authorize="isAuthenticated()" th:if="${doneReview == false}">
                                             <a class="btn text-white shadow-sm w-50 samuraitravel-btn"
                                                th:href="@{/houses/{houseId}/review/post(houseId=${house.id})}">レビューを投稿する</a>
                                         </div>
@@ -118,13 +117,11 @@
                                         
                                         <div class="container p-3">
                                             <div class="row">
-                                                <div class="col-6 pb-3" th:each="review : ${reviewList}">
-                                                    <div class="card position-relative">
-                                                        <div class="card-body">
+                                               <div class="col-6 pb-3" th:each="review : ${reviewList}">
+                                                 <div class="card position-relative"> 
+                                                   <div class="card-body">
                                                             <!-- 編集・削除ボタン -->
-                                                            <div sec:authorize="isAuthenticated()"
-                                                                 th:if="${loginUserId} == ${review.user.id}"
-                                                                 class="position-absolute top-0 end-0 m-2">
+                                                               <div th:if="${loginUserId != null and loginUserId == review.user.id}" class="position-absolute top-0 end-0 m-2">
                                                                 <a class="me-2" th:href="@{/houses/{houseId}/review/{reviewId}/edit(houseId=${house.id}, reviewId=${review.id})}">編集</a>
                                                                 <a href="javascript:void(0)"
                                                                    class="samuraitravel-link-danger"
